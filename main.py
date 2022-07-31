@@ -10,27 +10,10 @@ screen = pygame.display.set_mode(size)
 x = [200]
 y = [200]
 
-copy_x = [200]
-copy_y = [200]
-
 food_x = random.randint(0, 1000)
 food_y = random.randint(0, 1000)
 
 eaten = False
-
-
-def update_pos():
-    for j in range(len(x)):
-        if j == 0:
-            pass
-        else:
-            x[j] = copy_x[j-1]
-
-    for j in range(len(y)):
-        if j == 0:
-            pass
-        else:
-            x[j] = copy_y[j-1]
 
 
 def food_pos_update():
@@ -57,6 +40,9 @@ while True:
             sys.exit()
 
         if e.type == pygame.KEYDOWN:
+            cur_x = x.copy()
+            cur_y = y.copy()
+
             keys = pygame.key.get_pressed()
             if keys[pygame.K_LEFT]:
                 x[0] -= 30
@@ -66,23 +52,19 @@ while True:
                 y[0] += 30
             if keys[pygame.K_UP]:
                 y[0] -= 30
-            if keys[pygame.K_e]:
-                # Only for Testing
-                eaten = True
-            update_pos()
-            copy_x = x
-            copy_y = y
+
+            for i in range(1, len(x)):
+                x[i] = cur_x[i-1]
+            for i in range(1, len(y)):
+                y[i] = cur_y[i-1]
 
     screen.fill((0, 0, 0))
 
     if border_check():
-        # Add a Death Window or Retry Window
         sys.exit()
 
     if eaten_check():
         x.append(x[len(x)-1]+35)
-        y.append(y[len(y)-1])
-        copy_x.append(x[len(x)-1] + 35)
         y.append(y[len(y)-1])
         eaten = True
 
